@@ -1,0 +1,44 @@
+<div class="product-list">
+  <% (products || []).each do |product| %>
+    <div class="product-item">
+      <div class="product-content">
+        <% if defined?(show_in_detail) && show_in_detail %>
+          <h1><%= product.title %></h1>
+          <p class="product-description"><%= product.description %></p>
+          <p class="product-price">Price: $<%= sprintf("%.2f", product.price) %></p>
+        <% else %>
+          <h3 class="product-title"><%= link_to product.title, product_path(product) %></h3>
+          <p class="product-description"><%= product.description %></p>
+          <p class="product-price"><strong>Price:</strong> $<%= product.price %></p>
+        <% end %>
+      </div>
+
+
+          
+          <% if defined?(show_images) && show_images && product.product_images.any? %>
+          <div class="product-images">
+            <% product.product_images.each do |image| %>
+              <% if image.image.attached? %>
+                <div class="product-image-container">
+                  <%= image_tag url_for(image.image), class: 'product-image' %>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+        <% end %>
+      
+      <% if defined?(show_actions) && show_actions && current_user&.role == 'seller' && current_user&.id == product.user_id %>
+        <div class="product-actions">
+          <%= link_to 'Edit', edit_product_path(product), class: 'product-edit-btn' %>
+         
+          <%= button_to 'Delete', product_path(product),
+          method: :delete,
+          data: { confirm: 'Are you sure?' },
+          class: 'product-action-btn product-delete-btn',
+          form: { class: 'custom-delete-form' } %>
+
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

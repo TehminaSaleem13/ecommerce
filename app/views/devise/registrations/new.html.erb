@@ -1,0 +1,55 @@
+<%= form_with(model: resource, url: user_registration_path(resource_name), local: true, html: { class: 'signup-form', multipart: true }) do |f| %>
+  <%= render "devise/shared/error_messages", resource: @resource %>
+
+  <div class="form-container">
+    <h2 class="form-title">Sign Up</h2>
+
+    <div class="field">
+      <%= f.label :first_name %>
+      <%= f.text_field :first_name, autofocus: true, class: 'input-field' %>
+    </div>
+
+    <div class="field">
+      <%= f.label :last_name %>
+      <%= f.text_field :last_name, class: 'input-field' %>
+    </div>
+
+    <div class="field">
+      <%= f.label :email %>
+      <%= f.email_field :email, autocomplete: "email", class: 'input-field' %>
+    </div>
+
+    <div class="field">
+      <%= f.label :password %>
+      <% if @minimum_password_length %>
+        <em>(<%= @minimum_password_length %> characters minimum)</em>
+      <% end %>
+      <%= f.password_field :password, autocomplete: "new-password", class: 'input-field' %>
+    </div>
+
+    <div class="field">
+      <%= f.label :password_confirmation %>
+      <%= f.password_field :password_confirmation, autocomplete: "new-password", class: 'input-field' %>
+    </div>
+
+    <div class="field">
+      <%= f.label :role %>
+      <%= f.select :role, User.roles.keys.map { |role| [role.humanize, role] }, {}, class: 'input-field' %>
+    </div>
+
+    <div class="field">
+      <%= f.label :avatar %>
+      <%= f.file_field :avatar, class: 'input-file' %>
+    </div>
+
+    <div class="actions">
+      <%= f.submit "Sign Up", class: 'submit-button' %>
+    </div>
+
+    <div class="login-link">
+      <p>Already have an account? <%= link_to 'Login', new_user_session_path, class: 'login-button' %></p>
+    </div>
+  </div>
+<% end %>
+
+<%= render "devise/shared/links" %>

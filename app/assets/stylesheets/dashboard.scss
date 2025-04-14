@@ -1,0 +1,54 @@
+.avatar-hover-container:hover .file-input-hover {
+    display: flex;
+}
+
+/* For app/assets/stylesheets/products.scss or your main stylesheet */
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    margin-top: 1400px;
+}
+
+.product-item {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #ffffff;
+}
+
+.product-images {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.product-image {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 5px;
+    border: 1px solid #e0e0e0;
+}
+
+.product-images-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.image-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.image-card img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+}

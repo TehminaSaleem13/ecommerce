@@ -1,0 +1,4 @@
+<%= form_with(url: destroy_user_session_path, method: :delete, local: true, class: "logout-form") do |f| %>
+    <%= f.submit "Logout", class: "logout-button" %>
+  <% end %>
+  

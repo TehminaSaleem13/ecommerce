@@ -1,0 +1,14 @@
+<div class="products-section">
+  <h2>Your Products</h2>
+
+  <%= render partial: 'products/product_list', locals: {
+    products: @products,
+    show_actions: false,
+    show_images: true,
+    empty_message: current_user.role == 'seller' ? 
+      'You currently have no products. Click "Create Product" to add your first product.' :
+      current_user.role == 'buyer' ?
+        'No products are available at the moment. Please check back later.' :
+        'No products found.'
+  } %>
+</div>
