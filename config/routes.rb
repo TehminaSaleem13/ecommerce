@@ -10,6 +10,7 @@ Rails.application.routes.draw do
 
   resources :products do
     resources :product_images, only: [:create, :destroy]
+    resources :reviews, only: [:create, :update, :destroy, :edit]
   end
 
   resources :users, only: [:update]

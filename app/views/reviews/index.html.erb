@@ -1,0 +1,18 @@
+<div class="container">
+  <h2>Reviews for <%= @product.title %></h2>
+  
+  <% if @reviews.any? %>
+    <div class="review-list mt-4">
+      <%= render partial: 'reviews/review', collection: @reviews, as: :review %>
+    </div>
+  <% else %>
+    <p class="text-muted">No reviews yet for this product.</p>
+  <% end %>
+  
+  <div class="mt-4">
+    <% if user_signed_in? && current_user.role == 'buyer' && current_user != @product.user %>
+      <%= link_to 'Add a Review', new_product_review_path(@product), class: 'btn btn-primary' %>
+    <% end %>
+    <%= link_to 'Back to Product', product_path(@product), class: 'btn btn-secondary ml-2' %>
+  </div>
+</div>

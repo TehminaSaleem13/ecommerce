@@ -13,4 +13,4 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Found delete link:', link)
     })
 })
-import "../javascript/carousel"
+console.log('Application pack loaded')

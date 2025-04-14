@@ -19,25 +19,29 @@
 
   <div class="mb-3 w-full px-4 sm:px-6 lg:px-8">
     <h3 class="mb-3 text-lg font-medium text-gray-800">Images</h3>
-    <div id="existing-images" class="mb-3 space-y-3">
-      <% @product.product_images.each_with_index do |image, index| %>
-        <% if image.image.attached? %>
-          <div class="existing-image d-flex align-items-center mb-2 flex flex-wrap sm:flex-nowrap">
-            <%= image_tag url_for(image.image), class: 'product-image me-2 rounded-md shadow-sm', size: "100x100" %>
-            <div class="form-check ms-2">
-              <%= check_box_tag "product[product_images_attributes][#{index}][_destroy]", '1', false, class: "form-check-input mr-2" %>
-              <%= hidden_field_tag "product[product_images_attributes][#{index}][id]", image.id %>
-              <%= label_tag "product[product_images_attributes][#{index}][_destroy]", "Remove", class: "form-check-label text-sm text-red-600" %>
-            </div>
-          </div>
-        <% end %>
-      <% end %>
-    </div>
+    <!-- EXISTING IMAGES SECTION -->
+<div id="existing-images" class="mb-3 space-y-3">
+  <% @product.product_images.each_with_index do |image, index| %>
+    <% if image.image.attached? %>
+      <div class="existing-image d-flex align-items-center mb-2 flex flex-wrap sm:flex-nowrap">
+        <%= image_tag url_for(image.image), class: 'product-image me-2 rounded-md shadow-sm', size: "100x100" %>
+        <div class="form-check ms-2">
+          <%= check_box_tag "product[product_images_attributes][#{index}][_destroy]", '1', false, class: "form-check-input mr-2" %>
+          <%= hidden_field_tag "product[product_images_attributes][#{index}][id]", image.id %>
+          <%= label_tag "product[product_images_attributes][#{index}][_destroy]", "Remove", class: "form-check-label text-sm text-red-600" %>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+</div>
 
-    <div class="image-field mb-2 d-flex align-items-center flex-wrap sm:flex-nowrap">
-      <%= form.label :add_images, "Add Images", class: "form-label me-2 text-sm font-medium text-gray-700 w-full sm:w-auto" %>
-      <%= form.file_field :add_images, multiple: true, class: "form-control3 me-2 w-full sm:w-auto" %>
-    </div>
+<!-- ADD NEW IMAGES SECTION -->
+<div class="image-field mb-2 d-flex align-items-center flex-wrap sm:flex-nowrap">
+  <%= form.label :new_images, "Add New Images", class: "form-label me-2 text-sm font-medium text-gray-700 w-full sm:w-auto" %>
+  <%= file_field_tag "product[new_images][]", multiple: true, class: "form-control3 me-2 w-full sm:w-auto" %>
+</div>
+
+    
   </div>
 
   <div class="center-button text-center px-4 sm:px-6 lg:px-8">

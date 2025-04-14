@@ -8,7 +8,7 @@ class User < ApplicationRecord
   validates :first_name, :last_name, :email, :role, presence: true
 
   has_many :products, dependent: :destroy
-
+  has_many :reviews, dependent: :destroy
   # Add this line to enable avatar attachment
   has_one_attached :avatar
 

@@ -1,44 +1,84 @@
-<div class="product-list">
-  <% (products || []).each do |product| %>
-    <div class="product-item">
-      <div class="product-content">
-        <% if defined?(show_in_detail) && show_in_detail %>
-          <h1><%= product.title %></h1>
-          <p class="product-description"><%= product.description %></p>
-          <p class="product-price">Price: $<%= sprintf("%.2f", product.price) %></p>
-        <% else %>
-          <h3 class="product-title"><%= link_to product.title, product_path(product) %></h3>
-          <p class="product-description"><%= product.description %></p>
-          <p class="product-price"><strong>Price:</strong> $<%= product.price %></p>
-        <% end %>
-      </div>
-
-
-          
-          <% if defined?(show_images) && show_images && product.product_images.any? %>
-          <div class="product-images">
-            <% product.product_images.each do |image| %>
+<% if products.present? %>
+  <div class="product-list">
+    <% products.each do |product| %>
+      <div class="product-item">
+        <div class="product-content">
+          <% if defined?(show_in_detail) && show_in_detail %>
+            <h1><%= product.title %></h1>
+            <p class="product-description"><%= product.description %></p>
+            <p class="product-price">Price: $<%= sprintf("%.2f", product.price) %></p>
+          <% else %>
+            <h3 class="product-title"><%= link_to product.title, product_path(product) %></h3>
+            <p class="product-description"><%= product.description %></p>
+            <p class="product-price"><strong>Price:</strong> $<%= product.price %></p>
+          <% end %>
+        </div>
+        
+        <% if defined?(show_images) && show_images && product.product_images.any? %>
+        <div id="carousel-<%= product.id %>" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-inner">
+            <% product.product_images.each_with_index do |image, index| %>
               <% if image.image.attached? %>
-                <div class="product-image-container">
-                  <%= image_tag url_for(image.image), class: 'product-image' %>
+                <div class="carousel-item <%= 'active' if index == 0 %>">
+                  <%= image_tag url_for(image.image), class: 'd-block w-100', style: "object-fit: cover; height: 300px;" %>
                 </div>
               <% end %>
             <% end %>
           </div>
-        <% end %>
-      
-      <% if defined?(show_actions) && show_actions && current_user&.role == 'seller' && current_user&.id == product.user_id %>
-        <div class="product-actions">
-          <%= link_to 'Edit', edit_product_path(product), class: 'product-edit-btn' %>
-         
-          <%= button_to 'Delete', product_path(product),
-          method: :delete,
-          data: { confirm: 'Are you sure?' },
-          class: 'product-action-btn product-delete-btn',
-          form: { class: 'custom-delete-form' } %>
-
+          <% if product.product_images.size > 1 %>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carousel-<%= product.id %>" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carousel-<%= product.id %>" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          <% end %>
         </div>
       <% end %>
-    </div>
-  <% end %>
-</div>
+      
+      
+
+        <% if defined?(show_actions) && show_actions && current_user&.role == 'seller' && current_user&.id == product.user_id %>
+          <div class="product-actions">
+            <%= link_to 'Edit', edit_product_path(product), class: 'product-edit-btn' %>
+            <%= button_to 'Delete', product_path(product),
+              method: :delete,
+              data: { confirm: 'Are you sure?' },
+              class: 'product-action-btn product-delete-btn',
+              form: { class: 'custom-delete-form' } %>
+          </div>
+        <% end %>
+         <% if defined?(show_reviews) && show_reviews %>
+          <div class="reviews-section">
+            <h2>Reviews</h2>
+            <div id="reviews-<%= product.id %>">
+              <% if product.reviews.any? %>
+                <%= render partial: 'reviews/review', collection: product.reviews, as: :review %>
+              <% else %>
+                <p>No reviews yet. !</p>
+              <% end %>
+            </div>
+
+            <% if user_signed_in? && current_user != product.user %>
+              <div class="add-review-section mt-4">
+                <h3>Add a Review</h3>
+                <%= form_with(model: [product, Review.new], remote: true, class: "new-review-form", data: { product_id: product.id }) do |form| %>
+                  <div class="mb-3">
+                    <%= form.text_area :text, class: "form-control", rows: 3, placeholder: "Write your review here..." %>
+                  </div>
+                  <%= form.submit "Submit Review", class: "btn btn-primary" %>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <div class="no-products-message" style="text-align: center; margin-top: 40px; color: #666;">
+    <p><%= empty_message || "No products available." %></p>
+  </div>
+<% end %>

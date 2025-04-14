@@ -1,0 +1,9 @@
+<div class="container">
+  <h2>Add a Review for <%= @product.title %></h2>
+  
+  <%= render 'form', product: @product, review: @review %>
+  
+  <div class="mt-3">
+    <%= link_to 'Back to Product', product_path(@product), class: 'btn btn-secondary' %>
+  </div>
+</div>

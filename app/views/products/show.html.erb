@@ -4,12 +4,14 @@
       <%= render partial: 'products/product_list', locals: { 
         products: [@product],
         show_in_detail: true,
-        show_images: true
+        show_images: true,
+        show_reviews: true,
+
       } %>
       
       <div class="product-actions mt-4">
         <%= link_to 'Back to Products', root_path, class: 'btn btn-secondary' %>
         <% if current_user&.id == @product.user_id %>
-          <%= link_to 'Edit Product', edit_product_path(@product), class: 'btn btn-primary' %>
+          <%= link_to 'Edit Product', edit_product_path(@product), class: 'product-edit-btn' %>
         <% end %>
       </div>

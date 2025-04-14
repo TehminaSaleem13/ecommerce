@@ -1,0 +1,23 @@
+<div class="review card mb-3" id="review-<%= review.id %>">
+  <div class="card-body">
+    <div class="review-header d-flex justify-content-between mb-2">
+      <strong class="text-primary"><%= review.user.full_name %></strong>
+      <small class="text-muted"><%= time_ago_in_words(review.created_at) %> ago</small>
+    </div>
+    
+    <div class="review-body">
+      <p><%= review.text %></p>
+    </div>
+
+    <% if user_signed_in? && current_user == review.user %>
+      <div class="review-actions mt-2">
+        <%= link_to "Edit",edit_product_review_path(review.product, review), class: "btn btn-sm btn-outline-primary" %>
+        <%= button_to "Delete", product_review_path(review.product, review),
+                      method: :delete,
+                      class: "btn btn-sm btn-outline-danger",
+                      form: { class: "d-inline-block ml-2" },
+                      data: { confirm: "Are you sure?" } %>
+      </div>
+    <% end %>
+  </div>
+</div>
