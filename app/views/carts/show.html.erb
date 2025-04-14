@@ -1,0 +1,38 @@
+<h1>Your Cart</h1>
+
+<% if @cart.cart_items.any? %>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Total</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @cart.cart_items.each do |cart_item| %>
+        <tr>
+          <td><%= cart_item.product.title %></td>
+          <td><%= number_to_currency(cart_item.price) %></td>
+          <td>
+            <%= form_with(model: cart_item, url: cart_item_path(cart_item), method: :patch, remote: true) do |f| %>
+              <%= f.number_field :quantity, value: cart_item.quantity, min: 1 %>
+              <%= f.submit "Update", class: "btn btn-primary btn-sm" %>
+            <% end %>
+          </td>
+          <td><%= number_to_currency(cart_item.price * cart_item.quantity) %></td>
+          <td><%= button_to "Remove", cart_item_path(cart_item), method: :delete, class: "btn btn-danger btn-sm" %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <p>Total: <%= number_to_currency(@cart.cart_items.sum { |item| item.price * item.quantity }) %></p>
+<% else %>
+  <p>Your cart is empty.</p>
+<% end %>
+
+<%= link_to 'Continue Shopping', root_path, class: 'btn btn-secondary' %>
+<%= link_to 'Checkout', new_user_session_path, class: 'btn btn-primary' %>

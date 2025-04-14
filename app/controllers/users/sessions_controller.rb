@@ -2,7 +2,7 @@
 
 class Users::SessionsController < Devise::SessionsController
   # before_action :configure_sign_in_params, only: [:create]
-
+  after_action :merge_guest_cart_to_user_cart, only: [:create]
 
   def new
     self.resource = resource_class.new(sign_in_params)
