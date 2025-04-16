@@ -1,6 +1,5 @@
-
 <% if user_signed_in? %>
-  <div class="dashboard-container <%= @products.empty? ? 'default-margin' : 'seller-margin' %>">
+  <div class="dashboard-container <%= current_user.role == 'seller' ? (@your_products.empty? ? 'default-margin' : 'seller-margin') : (@products.empty? ? 'default-margin' : 'buyer-margin') %>">
     <h1>Welcome to Your Dashboard</h1>
 
     <div class="user-profile-card">
@@ -29,9 +28,7 @@
 
       <div class="profile-right">
         <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "logout-btn", form: { onsubmit: "return confirm('Are you sure you want to logout?');" } %>
-        <% if current_user.role == 'buyer' %>
-          <%= link_to 'Cart', cart_path, class: 'cart-btn btn btn-primary' %>
-        <% end %>
+        <%= link_to 'Cart', cart_path, class: 'cart-btn btn btn-primary' %>
       </div>
     </div>
 
@@ -40,21 +37,48 @@
         <%= link_to 'Create Product', new_product_path, class: 'create-product-btn' %>
       </div>
 
-      <div class="products-container">
-        <div class="products-header">
-          <h2>Your Products</h2>
+      <ul class="nav nav-tabs" id="productTabs" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" id="your-products-tab" data-toggle="tab" href="#your-products" role="tab" aria-controls="your-products" aria-selected="true">Your Products</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="all-products-tab" data-toggle="tab" href="#all-products" role="tab" aria-controls="all-products" aria-selected="false">All Products</a>
+        </li>
+      </ul>
+      <div class="tab-content" id="productTabsContent">
+        <div class="tab-pane fade show active" id="your-products" role="tabpanel" aria-labelledby="your-products-tab">
+          <div class="products-container">
+            <div class="products-header">
+              <h2>Your Products</h2>
+            </div>
+            <%= render partial: 'products/product_list', locals: {
+              products: @your_products,
+              show_actions: true,
+              show_images: true,
+              empty_message: "You currently have no products. Click \"Create Product\" to add your first product."
+            } %>
+            <div class="pagination-container">
+              <%= paginate @your_products, param_name: 'your_products_page' %>
+            </div>
+          </div>
         </div>
-        <%= render partial: 'products/product_list', locals: {
-          products: @products,
-          show_actions: true,
-          show_images: true,
-          empty_message: "You currently have no products. Click \"Create Product\" to add your first product."
-        } %>
-        <div class="pagination-container">
-          <%= paginate @products %>
+        <div class="tab-pane fade" id="all-products" role="tabpanel" aria-labelledby="all-products-tab">
+          <div class="products-container">
+            <div class="products-header">
+              <h2>All Products</h2>
+            </div>
+            <%= render partial: 'products/product_list', locals: {
+              products: @all_products,
+              show_actions: false,
+              show_images: true,
+              empty_message: "No other products are available right now."
+            } %>
+            <div class="pagination-container">
+              <%= paginate @all_products, param_name: 'all_products_page' %>
+            </div>
+          </div>
         </div>
       </div>
-
     <% elsif current_user.role == 'buyer' %>
       <div class="products-container">
         <div class="products-header">
@@ -78,6 +102,21 @@
     <div class="user-profile-card">
       <div class="profile-right">
         <%= link_to "Login", new_user_session_path, class: "login-btn" %>
+        <%= link_to 'Cart', cart_path, class: 'cart-btn btn btn-primary' %>
+      </div>
+    </div>
+    <div class="products-container">
+      <div class="products-header">
+        <h2>All Products</h2>
+      </div>
+      <%= render partial: 'products/product_list', locals: {
+        products: @products,
+        show_actions: false,
+        show_images: true,
+        empty_message: "No products are available right now."
+      } %>
+      <div class="pagination-container">
+        <%= paginate @products %>
       </div>
     </div>
   </div>
