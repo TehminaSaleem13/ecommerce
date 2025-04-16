@@ -1,38 +1,67 @@
-<h1>Your Cart</h1>
+<div class="container my-5">
+  <div class="card shadow-sm">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+      <h3 class="mb-0">🛒 Your Cart</h3>
+       <%= link_to 'Continue Shopping', root_path, class: 'btn btn-info' %>
+    </div>
+  
+    <div class="card-body">
+   
+      <% if @cart.cart_items.any? %>
+        <div class="table-responsive">
+          <table class="table table-hover align-middle text-center">
+            <thead class="table-light">
+              <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th style="width: 180px;">Quantity</th>
+                <th>Total</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @cart.cart_items.each do |cart_item| %>
+                <tr>
+                  <td class="fw-bold"><%= cart_item.product.title %></td>
+                  <td><%= number_to_currency(cart_item.price) %></td>
+                  <td>
+                    <%= form_with(model: cart_item, url: cart_item_path(cart_item), method: :patch, remote: true, class: 'd-flex align-items-center gap-2') do |f| %>
+                      <%= f.number_field :quantity, value: cart_item.quantity, min: 1, class: 'form-control form-control-sm w-50' %>
+                      <%= f.submit "Update", class: "btn btn-outline-primary btn-sm" %>
+                    <% end %>
+                  </td>
+                  <td><strong><%= number_to_currency(cart_item.price * cart_item.quantity) %></strong></td>
+                  <td>
+                    <%= button_to "Remove", cart_item_path(cart_item), method: :delete, class: "btn btn-outline-danger btn-sm" %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
 
-<% if @cart.cart_items.any? %>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Product</th>
-        <th>Price</th>
-        <th>Quantity</th>
-        <th>Total</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @cart.cart_items.each do |cart_item| %>
-        <tr>
-          <td><%= cart_item.product.title %></td>
-          <td><%= number_to_currency(cart_item.price) %></td>
-          <td>
-            <%= form_with(model: cart_item, url: cart_item_path(cart_item), method: :patch, remote: true) do |f| %>
-              <%= f.number_field :quantity, value: cart_item.quantity, min: 1 %>
-              <%= f.submit "Update", class: "btn btn-primary btn-sm" %>
-            <% end %>
-          </td>
-          <td><%= number_to_currency(cart_item.price * cart_item.quantity) %></td>
-          <td><%= button_to "Remove", cart_item_path(cart_item), method: :delete, class: "btn btn-danger btn-sm" %></td>
-        </tr>
+        <div class="d-flex justify-content-between align-items-center mt-4">
+          <h4 class="text-success mb-0">
+            🧾 Total: <%= number_to_currency(@cart.total_price) %>
+          </h4>
+          <%= link_to 'Checkout', new_user_session_path, class: 'btn btn-success btn-lg' %>
+        </div>
+
+        <div class="mt-4">
+          <%= form_with url: apply_coupon_cart_items_path, method: :post, local: true do |form| %>
+            <div class="form-group">
+              <%= form.label :coupon_code, 'Enter Coupon Code' %>
+              <%= form.text_field :coupon_code, class: 'form-control', required: true %>
+            </div>
+            <%= form.submit 'Apply Coupon', class: 'btn btn-primary' %>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="text-center py-5">
+          <p class="fs-5 text-muted">Your cart is empty.</p>
+          <%= link_to 'Continue Shopping', root_path, class: 'btn btn-outline-primary' %>
+        </div>
       <% end %>
-    </tbody>
-  </table>
-
-  <p>Total: <%= number_to_currency(@cart.cart_items.sum { |item| item.price * item.quantity }) %></p>
-<% else %>
-  <p>Your cart is empty.</p>
-<% end %>
-
-<%= link_to 'Continue Shopping', root_path, class: 'btn btn-secondary' %>
-<%= link_to 'Checkout', new_user_session_path, class: 'btn btn-primary' %>
+    </div>
+  </div>
+</div>

@@ -1,5 +1,5 @@
 class CartItemsController < ApplicationController
-  before_action :authenticate_user!, except: [:create]
+  before_action :authenticate_user!, except: [:create, :apply_coupon]
   before_action :set_cart_item, only: [:update, :destroy]
 
   def create
@@ -22,6 +22,15 @@ class CartItemsController < ApplicationController
       redirect_to @product, notice: 'Product added to cart.'
     else
       redirect_to @product, alert: 'Failed to add product to cart.'
+    end
+  end
+
+  def apply_coupon
+    @cart = current_user.cart || Cart.find_or_create_by(session_id: session.id)
+    if @cart.apply_coupon(params[:coupon_code])
+      redirect_to cart_path, notice: 'Coupon applied successfully.'
+    else
+      redirect_to cart_path, alert: 'Invalid coupon code.'
     end
   end
 

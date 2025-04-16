@@ -3,10 +3,24 @@ class ProductsController < ApplicationController
   before_action :set_product, only: [:show, :edit, :update, :destroy]
 
   def index
-    if current_user.role == 'seller'
-      @products = current_user.products.page(params[:page]).per(3)
+    # Always initialize @q, regardless of user status
+    @q = Product.ransack(params[:q])
+    
+    # Process the search results
+    search_results = @q.result(distinct: true)
+    
+    if user_signed_in?
+      if current_user.role == 'seller'
+        # For sellers, set up their products and the other products
+        @your_products = current_user.products.page(params[:your_products_page]).per(3)
+        @all_products = Product.where.not(user: current_user).page(params[:all_products_page]).per(3)
+      else
+        # For buyers
+        @products = search_results.page(params[:page]).per(3)
+      end
     else
-      @products = Product.page(params[:page]).per(3)
+      # For non-logged in users
+      @products = search_results.page(params[:page]).per(3)
     end
   end
 
