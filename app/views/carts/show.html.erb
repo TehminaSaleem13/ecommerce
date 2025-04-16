@@ -44,7 +44,10 @@
           <h4 class="text-success mb-0">
             🧾 Total: <%= number_to_currency(@cart.total_price) %>
           </h4>
-          <%= link_to 'Checkout', new_user_session_path, class: 'btn btn-success btn-lg' %>
+    <%= button_to 'Checkout with Stripe', checkout_create_path, method: :post, class: 'btn btn-success btn-lg' %>
+
+
+
         </div>
 
         <div class="mt-4">

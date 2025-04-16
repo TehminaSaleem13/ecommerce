@@ -15,6 +15,8 @@ gem 'sass-rails', '>= 6'
 gem 'webpacker', '6.0.0.rc.5'
 gem 'net-protocol', '~> 0.1.3'
 gem 'kaminari', '~> 1.2'
+gem 'stripe', '~> 5.33'
+gem 'dotenv-rails', groups: [:development, :test]
 
 
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks

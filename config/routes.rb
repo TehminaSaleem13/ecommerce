@@ -2,6 +2,11 @@ Rails.application.routes.draw do
   root to: 'dashboard#index'
   get 'dashboard/index'
 
+  post '/checkout/create', to: 'checkout#create', as: 'checkout_create'
+  get '/checkout/success', to: 'checkout#success', as: 'checkout_success'
+
+  post '/webhooks/stripe', to: 'webhooks#stripe'
+
   devise_for :users, controllers: {
     registrations: 'users/registrations',
     passwords: 'users/passwords',
