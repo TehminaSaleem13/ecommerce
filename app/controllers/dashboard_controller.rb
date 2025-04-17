@@ -2,8 +2,8 @@ class DashboardController < ApplicationController
   before_action :authenticate_user!, except: [:index]
 
   def index
-    # Initialize ransack search object
-    @q = Product.ransack(params[:q])
+      # Initialize ransack search object
+      @q = Product.ransack(params[:q])
     
     if user_signed_in?
       if current_user.role == 'seller'
@@ -13,9 +13,7 @@ class DashboardController < ApplicationController
         @products = Product.page(params[:page]).per(3)
       end
     else
-      # Changed to initialize @products for non-logged in users instead of redirecting
-      # This is to match what your view expects for non-logged in users
-      @products = Product.page(params[:page]).per(3)
+      redirect_to new_user_session_path, notice: 'Please sign in to access the dashboard.'
     end
   end
 end

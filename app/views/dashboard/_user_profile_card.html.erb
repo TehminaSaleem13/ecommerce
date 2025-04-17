@@ -1,39 +1,41 @@
+<%# app/views/shared/_user_profile_card.html.erb %>
 <div class="user-profile-card">
-  <div class="profile-left">
-    <div class="avatar-container">
-      <% if current_user&.avatar&.attached? %>
-        <%= image_tag current_user.avatar, class: "user-avatar", style: "width: 100px; height: 100px; object-fit: cover; border-radius: 50%;" %>
-      <% else %>
-        <div class="default-avatar" style="width: 100px; height: 100px; background-color: #ccc; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-          <span style="font-size: 40px; color: #fff;"><%= current_user&.full_name&.first&.upcase %></span>
-        </div>
-      <% end %>
-      <div class="avatar-hover-overlay">
-        <% if user_signed_in? %>
-          <%= form_with(model: current_user, url: user_registration_path, method: :put, multipart: true, id: "avatar-form", data: { remote: true }) do |f| %>
+  <% if logged_in %>
+    <div class="profile-left">
+      <div class="avatar-container">
+        <% if user.avatar.attached? %>
+          <%= image_tag user.avatar, class: "user-avatar", style: "width: 100px; height: 100px; object-fit: cover; border-radius: 50%;" %>
+        <% else %>
+          <div class="default-avatar" style="width: 100px; height: 100px; background-color: #ccc; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+            <span style="font-size: 40px; color: #fff;"><%= user.full_name[0].upcase %></span>
+          </div>
+        <% end %>
+        <div class="avatar-hover-overlay">
+          <%= form_with(model: user, url: user_registration_path, method: :put, multipart: true, id: "avatar-form", data: { remote: true }) do |f| %>
             <%= f.file_field :avatar, class: "avatar-input", accept: "image/*", style: "opacity: 0; position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: pointer;", onchange: "this.form.submit();" %>
             <%= f.submit "Update", style: "display: none;" %>
           <% end %>
-        <% end %>
+        </div>
+      </div>
+
+      <div class="user-details">
+        <h3><%= user.full_name %></h3>
+        <p><%= user.role.capitalize %></p>
       </div>
     </div>
 
-    <div class="user-details">
-      <% if user_signed_in? %>
-        <h3><%= current_user.full_name %></h3>
-        <p><%= current_user.role.capitalize %></p>
+    <div class="profile-right">
+      <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "logout-btn", form: { onsubmit: "return confirm('Are you sure you want to logout?');" } %>
+      <%= link_to cart_path, class: 'cart-icon-link' do %>
+        <i class="fas fa-shopping-cart"></i>
       <% end %>
     </div>
-  </div>
-
-  <div class="profile-right">
-    <% if user_signed_in? %>
-      <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "logout-btn", form: { onsubmit: "return confirm('Are you sure you want to logout?');" } %>
-    <% else %>
+  <% else %>
+    <div class="profile-right">
       <%= link_to "Login", new_user_session_path, class: "login-btn" %>
-    <% end %>
-    <%= link_to cart_path, class: 'cart-icon-link' do %>
-      <i class="fas fa-shopping-cart"></i>
-    <% end %>
-  </div>
+      <%= link_to cart_path, class: 'cart-icon-link' do %>
+        <i class="fas fa-shopping-cart"></i>
+      <% end %>
+    </div>
+  <% end %>
 </div>

@@ -2,9 +2,10 @@
   <div class="dashboard-container <%= current_user.role == 'seller' ? (@your_products.empty? ? 'default-margin' : 'seller-margin') : (@products.empty? ? 'default-margin' : 'buyer-margin') %>">
     <h1>Welcome to Your Dashboard</h1>
 
-    <%= render 'user_profile_card' %>
+    <%= render partial: 'user_profile_card', locals: { user: current_user, logged_in: true } %>
 
-    <%= render '/search_container' %>
+    <!-- Search Field -->
+    <%= render partial: '/search_container', locals: { q: @q } %>
 
     <% if current_user.role == 'seller' %>
       <div class="create-product-section mb-8">
@@ -21,45 +22,53 @@
       </ul>
       <div class="tab-content" id="productTabsContent">
         <div class="tab-pane fade show active" id="your-products" role="tabpanel" aria-labelledby="your-products-tab">
-          <%= render 'products_container',
-            header_text: 'Your Products',
+          <%= render partial: 'products_container', locals: {
             products: @your_products,
+            title: "Your Products",
             show_actions: true,
             show_images: true,
             empty_message: "You currently have no products. Click \"Create Product\" to add your first product.",
-            param_name: 'your_products_page' %>
+            pagination_param: 'your_products_page'
+          } %>
         </div>
         <div class="tab-pane fade" id="all-products" role="tabpanel" aria-labelledby="all-products-tab">
-          <%= render 'products_container',
-            header_text: 'All Products',
+          <%= render partial: 'products_container', locals: {
             products: @all_products,
+            title: "All Products",
             show_actions: false,
             show_images: true,
             empty_message: "No other products are available right now.",
-            param_name: 'all_products_page' %>
+            pagination_param: 'all_products_page'
+          } %>
         </div>
       </div>
     <% elsif current_user.role == 'buyer' %>
-      <%= render 'products_container',
-        header_text: 'All Products',
+      <%= render partial: 'products_container', locals: {
         products: @products,
+        title: "All Products",
         show_actions: false,
         show_images: true,
         empty_message: "No products are available right now.",
-        param_name: 'products_page' %>
+        pagination_param: nil
+      } %>
     <% end %>
   </div>
 <% else %>
   <div class="dashboard-container default-margin">
     <h1>Welcome to Your Dashboard</h1>
-    <%= render 'user_profile_card' %>
+    
+    <%= render partial: 'user_profile_card', locals: { logged_in: false } %>
 
-    <%= render 'products_container',
-      header_text: 'All Products',
+    <!-- Search Field -->
+    <%= render partial: '/search_container', locals: { q: @q } %>
+
+    <%= render partial: 'products_container', locals: {
       products: @products,
+      title: "All Products",
       show_actions: false,
       show_images: true,
       empty_message: "No products are available right now.",
-      param_name: 'products_page' %>
+      pagination_param: nil
+    } %>
   </div>
 <% end %>

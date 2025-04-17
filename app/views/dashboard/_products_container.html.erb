@@ -1,6 +1,7 @@
+<%# app/views/shared/_product_container.html.erb %>
 <div class="products-container">
   <div class="products-header">
-    <h2><%= header_text %></h2>
+    <h2><%= title %></h2>
   </div>
   <%= render partial: 'products/product_list', locals: {
     products: products,
@@ -9,6 +10,10 @@
     empty_message: empty_message
   } %>
   <div class="pagination-container">
-    <%= paginate products, param_name: param_name %>
+    <% if pagination_param.present? %>
+      <%= paginate products, param_name: pagination_param %>
+    <% else %>
+      <%= paginate products %>
+    <% end %>
   </div>
 </div>
