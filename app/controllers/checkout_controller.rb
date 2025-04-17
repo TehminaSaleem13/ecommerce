@@ -32,7 +32,7 @@ class CheckoutController < ApplicationController
   def insufficient_inventory?(cart)
     cart.cart_items.any? do |cart_item|
       if cart_item.product.quantity < cart_item.quantity
-        flash[:alert] = "Insufficient quantity available for #{cart_item.product.title}."
+        flash[:alert] = "Insufficient quantity available for #{cart_item.product.title}. Only #{cart_item.product.quantity} available."
         true
       end
     end
