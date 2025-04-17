@@ -54,12 +54,14 @@
     <h1>Welcome to Your Dashboard</h1>
     <%= render 'user_profile_card' %>
 
+    <%= render '/search_container' %>
+
     <%= render 'products_container',
       header_text: 'All Products',
       products: @products,
       show_actions: false,
       show_images: true,
       empty_message: "No products are available right now.",
-      param_name: 'products_page' %>
+      param_name: 'page' %>
   </div>
 <% end %>

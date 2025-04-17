@@ -1,19 +1,21 @@
-# app/controllers/checkout_controller.rb
 class CheckoutController < ApplicationController
-  before_action :authenticate_user!
-
   def create
-    cart = current_user.cart
-    if cart.blank? || cart.cart_items.empty?
-      redirect_to cart_path, alert: 'Your cart is empty.' and return
-    end
+    if user_signed_in?
+      cart = current_user.cart
+      if cart.blank? || cart.cart_items.empty?
+        redirect_to cart_path, alert: 'Your cart is empty.' and return
+      end
 
-    if insufficient_inventory?(cart)
-      redirect_to cart_path and return
-    end
+      if insufficient_inventory?(cart)
+        redirect_to cart_path and return
+      end
 
-    session = StripeCheckoutService.new(cart).create_session
-    redirect_to session.url, allow_other_host: true
+      session = StripeCheckoutService.new(cart).create_session
+      redirect_to session.url, allow_other_host: true
+    else
+      # Redirect non-logged-in users to the sign-up or login page
+      redirect_to new_user_session_path, alert: 'Please sign in or sign up to proceed with checkout.'
+    end
   end
 
   def success
