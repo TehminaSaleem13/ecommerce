@@ -2,7 +2,7 @@
   <div class="card shadow-sm">
     <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
       <h3 class="mb-0">🛒 Your Cart</h3>
-       <%= link_to 'Continue Shopping', root_path, class: 'btn btn-info' %>
+       <%= link_to 'Continue Shopping', root_path, class: 'btn', style: 'background-color:rgb(255, 255, 255); color:rgb(255, 255, 255); border-radius: 10px;' %>
     </div>
   
     <div class="card-body">
@@ -44,7 +44,7 @@
           <h4 class="text-success mb-0">
             🧾 Total: <%= number_to_currency(@cart.total_price) %>
           </h4>
-    <%= button_to 'Checkout with Stripe', checkout_create_path, method: :post, class: 'btn btn-success btn-lg' %>
+    <%= button_to 'Checkout with Stripe', checkout_create_path, method: :post, class: 'btn btn-info' %>
 
 
 

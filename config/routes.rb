@@ -15,7 +15,7 @@ Rails.application.routes.draw do
 
   resources :products do
     collection do
-      get :search_suggestions
+      get :suggestions
     end
     resources :product_images, only: [:create, :destroy]
     resources :reviews, only: [:create, :update, :destroy, :edit]

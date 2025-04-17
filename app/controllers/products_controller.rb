@@ -2,15 +2,17 @@ class ProductsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_product, only: [:show, :edit, :update, :destroy]
 
-  def search_suggestions
-    @q = Product.ransack(params[:q])
-    @products = @q.result(distinct: true).limit(5)
-    
+
+  def suggestions
+    @products = Product.ransack(title_cont: params.dig(:q, :title_cont)).result(distinct: true).limit(5)
+  
     respond_to do |format|
+      format.js   
       format.html { render partial: 'products/search_suggestions', layout: false }
-      format.js
     end
   end
+  
+  
 
   def index
     

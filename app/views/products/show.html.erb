@@ -12,12 +12,7 @@
         <%= link_to 'Back to Products', root_path, class: 'btn btn-secondary' %>
         <% if user_signed_in? %>
           <% if current_user.role == 'buyer' || (current_user.role == 'seller' && current_user.id != @product.user_id) %>
-          <% if @product.quantity.zero? %>
-              <button class="btn btn-primary" disabled>Add to Cart</button>
-              <p class="text-danger">Out of Stock</p>
-            <% else %>
-              <%= button_to 'Add to Cart', cart_items_path(product_id: @product.id), class: 'btn btn-primary' %>
-            <% end %>
+                        <%= button_to 'Add to Cart', cart_items_path(product_id: @product.id), class: 'btn btn-primary', disabled: @product.quantity.zero? %>
           <% elsif current_user.id == @product.user_id %>
             <%= link_to 'Edit Product', edit_product_path(@product), class: 'product-edit-btn' %>
           <% end %>

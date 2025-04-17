@@ -3,7 +3,7 @@ class Product < ApplicationRecord
   belongs_to :user
   has_many :product_images, dependent: :destroy
   has_many :reviews, dependent: :destroy
-  has_many :cart_items
+  has_many :cart_items, dependent: :destroy
   has_many :orders
 
   accepts_nested_attributes_for :product_images, allow_destroy: true

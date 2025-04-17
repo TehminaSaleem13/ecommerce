@@ -1,0 +1,7 @@
+document.getElementById("search-suggestions").innerHTML = `
+  <ul class="list-group">
+    <% @products.each do |product| %>
+      <li class="list-group-item"><%= j product.title %></li>
+    <% end %>
+  </ul>
+`;

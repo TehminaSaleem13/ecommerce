@@ -1275,3 +1275,27 @@ input[type="file"] {
 #search-suggestions li:hover {
     background-color: #f0f0f0;
 }
+
+
+
+
+/* app/assets/stylesheets/application.css */
+
+.search-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    z-index: 1050;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-top: none;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.suggestion-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
