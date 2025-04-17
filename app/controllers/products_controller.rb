@@ -2,12 +2,17 @@ class ProductsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_product, only: [:show, :edit, :update, :destroy]
 
-  def index
-    # Always initialize @q, regardless of user status
+  def search_suggestions
     @q = Product.ransack(params[:q])
+    @products = @q.result(distinct: true).limit(5)
     
-    # Process the search results
-    search_results = @q.result(distinct: true)
+    respond_to do |format|
+      format.html { render partial: 'products/search_suggestions', layout: false }
+      format.js
+    end
+  end
+
+  def index
     
     if user_signed_in?
       if current_user.role == 'seller'

@@ -17,6 +17,7 @@ gem 'net-protocol', '~> 0.1.3'
 gem 'kaminari', '~> 1.2'
 gem 'stripe', '~> 5.33'
 gem 'dotenv-rails', groups: [:development, :test]
+gem 'ransack'
 
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'

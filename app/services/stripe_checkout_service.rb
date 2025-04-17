@@ -1,4 +1,4 @@
-# app/services/stripe_checkout_service.rb
+
 class StripeCheckoutService
     def initialize(cart)
       @cart = cart

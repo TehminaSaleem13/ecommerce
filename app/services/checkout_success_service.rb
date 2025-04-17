@@ -1,4 +1,4 @@
-# app/services/checkout_success_service.rb
+
 class CheckoutSuccessService
     def initialize(cart)
       @cart = cart

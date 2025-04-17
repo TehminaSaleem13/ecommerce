@@ -1,0 +1,14 @@
+<div class="products-container">
+  <div class="products-header">
+    <h2><%= header_text %></h2>
+  </div>
+  <%= render partial: 'products/product_list', locals: {
+    products: products,
+    show_actions: show_actions,
+    show_images: show_images,
+    empty_message: empty_message
+  } %>
+  <div class="pagination-container">
+    <%= paginate products, param_name: param_name %>
+  </div>
+</div>

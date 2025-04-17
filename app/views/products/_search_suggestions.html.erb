@@ -1,0 +1,8 @@
+<!-- app/views/products/_search_suggestions.html.erb -->
+<ul>
+  <% @products.each do |product| %>
+    <li>
+      <%= link_to product.title, product_path(product), class: 'search-suggestion-item' %>
+    </li>
+  <% end %>
+</ul>
