@@ -1,3 +1,4 @@
+# app/models/cart.rb
 class Cart < ApplicationRecord
   has_many :cart_items, dependent: :destroy
   belongs_to :user, optional: true
@@ -15,6 +16,6 @@ class Cart < ApplicationRecord
   end
 
   def total_price
-    cart_items.sum(&:price)
+    cart_items.sum { |item| item.total_price } 
   end
 end

@@ -30,7 +30,7 @@
                       <%= f.submit "Update", class: "btn btn-outline-primary btn-sm" %>
                     <% end %>
                   </td>
-                  <td><strong><%= number_to_currency(cart_item.price * cart_item.quantity) %></strong></td>
+                  <td><strong><%= number_to_currency(cart_item.total_price) %></strong></td>
                   <td>
                     <%= button_to "Remove", cart_item_path(cart_item), method: :delete, class: "btn btn-outline-danger btn-sm" %>
                   </td>

@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   post '/checkout/create', to: 'checkout#create', as: 'checkout_create'
   get '/checkout/success', to: 'checkout#success', as: 'checkout_success'
 
-  post '/webhooks/stripe', to: 'webhooks#stripe'
+  post 'stripe/webhooks', to: 'stripe_webhooks#create'
 
   devise_for :users, controllers: {
     registrations: 'users/registrations',

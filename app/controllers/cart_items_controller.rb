@@ -1,5 +1,5 @@
 class CartItemsController < ApplicationController
-  before_action :authenticate_user!, except: [:create, :apply_coupon]
+  before_action :authenticate_user!, except: [:create]
   before_action :set_cart_item, only: [:update, :destroy]
 
   def create
