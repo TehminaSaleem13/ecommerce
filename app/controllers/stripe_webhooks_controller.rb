@@ -1,4 +1,4 @@
-# app/controllers/stripe_webhooks_controller.rb
+
 class StripeWebhooksController < ApplicationController
   skip_before_action :verify_authenticity_token
 
@@ -11,16 +11,12 @@ class StripeWebhooksController < ApplicationController
 
     begin
       event = Stripe::Webhook.construct_event(payload, sig_header, endpoint_secret)
-      Rails.logger.info("Webhook received: #{event.type}")
-      Rails.logger.info("Webhook payload: #{payload}")
-    rescue JSON::ParserError => e
+    rescue JSON::ParserError
       # Invalid payload
-      Rails.logger.error("Webhook error: Invalid payload")
       head :bad_request
       return
-    rescue Stripe::SignatureVerificationError => e
+    rescue Stripe::SignatureVerificationError
       # Invalid signature
-      Rails.logger.error("Webhook error: Invalid signature")
       head :bad_request
       return
     end
@@ -37,7 +33,6 @@ class StripeWebhooksController < ApplicationController
   private
 
   def handle_checkout_session(session)
-    Rails.logger.info("Handling checkout session: #{session.id}")
-    # No need to update quantities here; it will be handled by the CheckoutController
+    
   end
 end

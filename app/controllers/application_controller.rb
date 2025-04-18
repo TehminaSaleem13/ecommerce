@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
 
   def initialize_cart
     session[:cart] ||= {}
-    Rails.logger.info "Initialized cart: #{session[:cart]}"
+   
   end
 
   def after_sign_in_path_for(resource)

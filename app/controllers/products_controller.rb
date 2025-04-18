@@ -1,31 +1,17 @@
 class ProductsController < ApplicationController
+  include ProductFilterable
   before_action :set_product, only: [:show, :edit, :update, :destroy]
 
   def search_suggestions
-    @q = Product.ransack(params[:q])
+    @q = Product.ransack(params[:q])  
     @products = @q.result(distinct: true).limit(5)
-
+  
     respond_to do |format|
       format.html { render partial: 'products/search_suggestions', layout: false }
       format.js
     end
   end
-
-  def index
-    @q = Product.ransack(params[:q])
-    @search_results = @q.result(distinct: true)
-
-    if user_signed_in?
-      if current_user.role == 'seller'
-        @your_products = current_user.products.page(params[:your_products_page]).per(3)
-        @all_products = @search_results.where.not(user: current_user).page(params[:all_products_page]).per(3)
-      else
-        @products = @search_results.page(params[:page]).per(3)
-      end
-    else
-      @products = @search_results.page(params[:page]).per(3)
-    end
-  end
+  
 
   def show
   end
@@ -69,7 +55,6 @@ class ProductsController < ApplicationController
   end
 
   def destroy
-    @product = Product.find(params[:id])
     if @product.destroy
       flash[:notice] = "Product deleted successfully"
       redirect_to root_path, turbolinks: false
