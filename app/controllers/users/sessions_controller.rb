@@ -1,8 +1,7 @@
-
-
 class Users::SessionsController < Devise::SessionsController
   # before_action :configure_sign_in_params, only: [:create]
-  after_action :merge_guest_cart_to_user_cart, only: [:create]
+  # Remove this line:
+  # after_action :merge_guest_cart_to_user_cart, only: [:create]
 
   def new
     self.resource = resource_class.new(sign_in_params)
@@ -12,19 +11,16 @@ class Users::SessionsController < Devise::SessionsController
 
   def create
     self.resource = warden.authenticate!(auth_options)
-
-   
+    
     set_flash_message(:notice, :signed_in, message: 'You have successfully logged in.') if is_flashing_format?
-    redirect_to root_path, notice: "You have successfully logged in."
-
-    # Sign the user in without redirecting
+    
+    # Sign the user in
     sign_in(resource_name, resource)
     
-    # Optionally yield to a block if necessary
-    # yield resource if block_given?
+    # Set a flag to trigger cart merging on the next request
+    session[:cart_needs_merge] = true
     
-    # Render the response with flash message without redirecting
-    # render 'devise/sessions/new' # or any view you want to render
+    redirect_to root_path, notice: "You have successfully logged in."
   end
 
   # DELETE /resource/sign_out
