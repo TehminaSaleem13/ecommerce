@@ -1,83 +1,67 @@
 <% if user_signed_in? %>
-<div class="dashboard-container <%= @products.empty? ? 'default-margin' : 'seller-margin' %>">
-
-
+  <div class="dashboard-container <%= current_user.role == 'seller' ? (@your_products.empty? ? 'default-margin' : 'seller-margin') : (@products.empty? ? 'default-margin' : 'buyer-margin') %>">
     <h1>Welcome to Your Dashboard</h1>
 
-    <div class="user-profile-card">
-      <div class="profile-left">
-        <div class="avatar-container">
-          <% if current_user.avatar.attached? %>
-            <%= image_tag current_user.avatar, class: "user-avatar", style: "width: 100px; height: 100px; object-fit: cover; border-radius: 50%;" %>
-          <% else %>
-            <div class="default-avatar" style="width: 100px; height: 100px; background-color: #ccc; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-              <span style="font-size: 40px; color: #fff;"><%= current_user.full_name[0].upcase %></span>
-            </div>
-          <% end %>
-     <div class="avatar-hover-overlay">
-            <%= form_with(model: current_user, url: user_registration_path, method: :put, multipart: true, id: "avatar-form", data: { remote: true }) do |f| %>
-          
-              <%= f.file_field :avatar, class: "avatar-input", accept: "image/*", style: "opacity: 0; position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: pointer;", onchange: "this.form.submit();" %>
-              <%= f.submit "Update", style: "display: none;" %>
-            <% end %>
-          </div>
+    <%= render 'user_profile_card' %>
 
-        </div>
-
-        <div class="user-details">
-          <h3><%= current_user.full_name %></h3>
-          <p><%= current_user.role.capitalize %></p>
-        </div>
-      </div>
-
-      <div class="profile-right">
-        <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "logout-btn", form: { onsubmit: "return confirm('Are you sure you want to logout?');" } %>
-      </div>
-    </div>
+    <%= render '/search_container' %>
 
     <% if current_user.role == 'seller' %>
       <div class="create-product-section mb-8">
         <%= link_to 'Create Product', new_product_path, class: 'create-product-btn' %>
       </div>
 
-      <div class="products-container">
-        <div class="products-header">
-          <h2>Your Products</h2>
+      <ul class="nav nav-tabs" id="productTabs" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" id="your-products-tab" data-toggle="tab" href="#your-products" role="tab" aria-controls="your-products" aria-selected="true">Your Products</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="all-products-tab" data-toggle="tab" href="#all-products" role="tab" aria-controls="all-products" aria-selected="false">All Products</a>
+        </li>
+      </ul>
+      <div class="tab-content" id="productTabsContent">
+        <div class="tab-pane fade show active" id="your-products" role="tabpanel" aria-labelledby="your-products-tab">
+          <%= render 'products_container',
+            header_text: 'Your Products',
+            products: @your_products,
+            show_actions: true,
+            show_images: true,
+            empty_message: "You currently have no products. Click \"Create Product\" to add your first product.",
+            param_name: 'your_products_page' %>
         </div>
-        <%= render partial: 'products/product_list', locals: { 
-          products: @products, 
-          show_actions: true, 
-          show_images: true, 
-          empty_message: "You currently have no products. Click \"Create Product\" to add your first product." 
-        } %>
-      <div class="pagination-container">
- 
-
-  <%= paginate @products %>
-</div>
-
+        <div class="tab-pane fade" id="all-products" role="tabpanel" aria-labelledby="all-products-tab">
+          <%= render 'products_container',
+            header_text: 'All Products',
+            products: @all_products,
+            show_actions: false,
+            show_images: true,
+            empty_message: "No other products are available right now.",
+            param_name: 'all_products_page' %>
+        </div>
       </div>
-
     <% elsif current_user.role == 'buyer' %>
-      <div class="products-container">
-        <div class="products-header">
-          <h2>All Products</h2>
-        </div>
-        <%= render partial: 'products/product_list', locals: { 
-          products: @products, 
-          show_actions: false, 
-          show_images: true, 
-          empty_message: "No products are available right now." 
-        } %>
-             <div class="pagination-container">
- 
-
-  <%= paginate @products %>
-</div>
-          <% end %>
-      </div>
+      <%= render 'products_container',
+        header_text: 'All Products',
+        products: @products,
+        show_actions: false,
+        show_images: true,
+        empty_message: "No products are available right now.",
+        param_name: 'products_page' %>
     <% end %>
-    
   </div>
-    
-  
+<% else %>
+  <div class="dashboard-container default-margin">
+    <h1>Welcome to Your Dashboard</h1>
+    <%= render 'user_profile_card' %>
+
+    <%= render '/search_container' %>
+
+    <%= render 'products_container',
+      header_text: 'All Products',
+      products: @products,
+      show_actions: false,
+      show_images: true,
+      empty_message: "No products are available right now.",
+      param_name: 'page' %>
+  </div>
+<% end %>

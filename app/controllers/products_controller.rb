@@ -1,14 +1,17 @@
 class ProductsController < ApplicationController
-  before_action :authenticate_user!
+  include ProductFilterable
   before_action :set_product, only: [:show, :edit, :update, :destroy]
 
-  def index
-    if current_user.role == 'seller'
-      @products = current_user.products.page(params[:page]).per(3)
-    else
-      @products = Product.page(params[:page]).per(3)
+  def search_suggestions
+    @q = Product.ransack(params[:q])  
+    @products = @q.result(distinct: true).limit(5)
+  
+    respond_to do |format|
+      format.html { render partial: 'products/search_suggestions', layout: false }
+      format.js
     end
   end
+  
 
   def show
   end
@@ -20,26 +23,23 @@ class ProductsController < ApplicationController
 
   def create
     @product = current_user.products.build(product_params)
-    
+
     if @product.save
-      # Manually handle new image uploads
       if params[:product][:new_images]
         params[:product][:new_images].each do |new_image|
           @product.product_images.create(image: new_image)
         end
       end
-      
+
       redirect_to @product, notice: 'Product created successfully.'
     else
       render :new
     end
   end
-  
-  
+
   def edit
     @product.product_images.build if @product.product_images.empty?
   end
-  
 
   def update
     if @product.update(product_params)
@@ -53,10 +53,8 @@ class ProductsController < ApplicationController
       render :edit
     end
   end
-  
 
   def destroy
-    @product = Product.find(params[:id])
     if @product.destroy
       flash[:notice] = "Product deleted successfully"
       redirect_to root_path, turbolinks: false
@@ -73,7 +71,7 @@ class ProductsController < ApplicationController
   end
 
   def product_params
-    params.require(:product).permit(:title, :description, :price,
+    params.require(:product).permit(:title, :description, :price, :quantity,
       product_images_attributes: [:id, :image, :_destroy])
   end
 end

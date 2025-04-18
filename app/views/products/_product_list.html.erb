@@ -11,6 +11,7 @@
             <h3 class="product-title"><%= link_to product.title, product_path(product) %></h3>
             <p class="product-description"><%= product.description %></p>
             <p class="product-price"><strong>Price:</strong> $<%= product.price %></p>
+              <p class="product-price"><strong>Created by:</strong> <%= product.user.full_name %></p>
           <% end %>
         </div>
         

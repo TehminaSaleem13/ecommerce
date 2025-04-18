@@ -1,0 +1,11 @@
+<% if @session.id %>
+  Stripe('<%= Rails.configuration.stripe[:publishable_key] %>').redirectToCheckout({
+    sessionId: '<%= @session.id %>'
+  }).then(function (result) {
+    if (result.error) {
+      alert(result.error.message);
+    }
+  });
+<% else %>
+  alert('There was an error processing your payment.');
+<% end %>
