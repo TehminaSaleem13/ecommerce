@@ -13,7 +13,7 @@ class CheckoutController < ApplicationController
       session = StripeCheckoutService.new(cart).create_session
       redirect_to session.url, allow_other_host: true
     else
-      # Redirect non-logged-in users to the sign-up or login page
+    
       redirect_to new_user_session_path, alert: 'Please sign in or sign up to proceed with checkout.'
     end
   end
@@ -23,10 +23,12 @@ class CheckoutController < ApplicationController
     stripe_session = Stripe::Checkout::Session.retrieve(session_id)
 
     cart = current_user.cart
-    CheckoutSuccessService.new(cart).process
 
-    flash[:notice] = "Payment successful. Thank you for your purchase!"
-    redirect_to root_path
+    
+    order = CheckoutSuccessService.new(cart).process
+
+    flash[:notice] = "Order ##{order.id} has been placed successfully! Thank you for your purchase!"
+    redirect_to root_path  
   end
 
   private

@@ -1,8 +1,4 @@
 class Users::SessionsController < Devise::SessionsController
-  # before_action :configure_sign_in_params, only: [:create]
-  # Remove this line:
-  # after_action :merge_guest_cart_to_user_cart, only: [:create]
-
   def new
     self.resource = resource_class.new(sign_in_params)
     clean_up_passwords(resource)
@@ -14,10 +10,10 @@ class Users::SessionsController < Devise::SessionsController
     
     set_flash_message(:notice, :signed_in, message: 'You have successfully logged in.') if is_flashing_format?
     
-    # Sign the user in
+   
     sign_in(resource_name, resource)
     
-    # Set a flag to trigger cart merging on the next request
+    
     session[:cart_needs_merge] = true
     
     redirect_to root_path, notice: "You have successfully logged in."

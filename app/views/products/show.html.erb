@@ -1,6 +1,6 @@
-<div class="product-list1">
-  <div class="product-item2">
-    <div class="product-content">
+<div class="product-detail-container">
+  <div class="product-detail-card">
+    <div class="product-detail-content">
       <%= render partial: 'products/product_list', locals: {
         products: [@product],
         show_in_detail: true,
@@ -8,14 +8,14 @@
         show_reviews: true,
       } %>
 
-      <div class="product-actions mt-4">
-        <%= link_to 'Back to Products', root_path, class: 'btn btn-secondary' %>
+      <div class="product-detail-actions">
+        <%= link_to 'Back to Products', root_path, class: 'custom-save-btn' %>
       
-          <%= button_to 'Add to Cart', cart_items_path(product_id: @product.id), class: 'btn btn-primary' %>
+        <%= button_to 'Add to Cart', cart_items_path(product_id: @product.id), class: 'custom-save-btn' %>
         
         <% if user_signed_in? %>
           <% if current_user.id == @product.user_id %>
-            <%= link_to 'Edit Product', edit_product_path(@product), class: 'product-edit-btn' %>
+            <%= link_to 'Edit Product', edit_product_path(@product), class: 'btn btn-secondary' %>
           <% end %>
         <% end %>
       </div>

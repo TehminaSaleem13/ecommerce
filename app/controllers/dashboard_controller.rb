@@ -4,7 +4,7 @@ class DashboardController < ApplicationController
   include CartManagement
 
   def suggestions
-    @products = Product.ransack(title_cont: params.dig(:q, :title_cont)).result(distinct: true).limit(5)
+    @products = Product.order(created_at: :desc).ransack(title_cont: params.dig(:q, :title_cont)).result(distinct: true)
 
     respond_to do |format|
       format.js
