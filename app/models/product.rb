@@ -14,15 +14,6 @@ class Product < ApplicationRecord
 
   before_create :generate_unique_serial_number
 
- 
-  def self.ransackable_attributes(auth_object = nil)
-    ["title", "description", "created_by"]
-  end
-  
-
-  def self.ransackable_associations(auth_object = nil)
-    ["product_images", "user", "reviews", "cart_items", "orders"]
-  end
 
   private
 
