@@ -14,14 +14,6 @@ class Product < ApplicationRecord
 
   before_create :generate_unique_serial_number
 
-  # Add these methods for Ransack
-  def self.ransackable_attributes(auth_object = nil)
-    ["created_at", "description", "id", "price", "quantity", "serial_number", "title", "updated_at", "user_id"]
-  end
-
-  def self.ransackable_associations(auth_object = nil)
-    ["product_images", "user", "reviews", "cart_items", "orders"]
-  end
 
   private
 

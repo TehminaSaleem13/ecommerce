@@ -1,4 +1,3 @@
-
 module CartManagement
   extend ActiveSupport::Concern
 
@@ -9,9 +8,9 @@ module CartManagement
   protected
 
   def check_for_cart_merge
-    # Remove the flag
-    session.delete(:cart_needs_merge)
     
+    CartMerger.new(current_user, session).merge
+    session.delete(:cart_needs_merge)
     
     redirect_to cart_path
   end

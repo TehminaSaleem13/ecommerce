@@ -1,8 +1,4 @@
 class Users::SessionsController < Devise::SessionsController
-  # before_action :configure_sign_in_params, only: [:create]
-  # Remove this line:
-  # after_action :merge_guest_cart_to_user_cart, only: [:create]
-
   def new
     self.resource = resource_class.new(sign_in_params)
     clean_up_passwords(resource)
@@ -11,19 +7,16 @@ class Users::SessionsController < Devise::SessionsController
 
   def create
     self.resource = warden.authenticate!(auth_options)
-    
     set_flash_message(:notice, :signed_in, message: 'You have successfully logged in.') if is_flashing_format?
-    
-    # Sign the user in
     sign_in(resource_name, resource)
-    
-    # Set a flag to trigger cart merging on the next request
+
+ 
     session[:cart_needs_merge] = true
     
     redirect_to root_path, notice: "You have successfully logged in."
   end
 
-  # DELETE /resource/sign_out
+
   def destroy
     signed_out = (Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name))
     set_flash_message :notice, :signed_out if signed_out && is_flashing_format?
@@ -33,7 +26,7 @@ class Users::SessionsController < Devise::SessionsController
 
   protected
 
-  # If you have extra params to permit, append them to the sanitizer.
+ 
   def configure_sign_in_params
     devise_parameter_sanitizer.permit(:sign_in, keys: [:attribute])
   end
