@@ -2,15 +2,6 @@ class ProductsController < ApplicationController
   include ProductFilterable
   before_action :set_product, only: [:show, :edit, :update, :destroy]
 
-  def search_suggestions
-    @q = Product.ransack(params[:q])  
-    @products = @q.result(distinct: true).limit(5)
-  
-    respond_to do |format|
-      format.html { render partial: 'products/search_suggestions', layout: false }
-      format.js
-    end
-  end
   
 
   def show

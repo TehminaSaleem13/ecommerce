@@ -5,7 +5,7 @@
 
     <%= render 'header' %>
 
-    <%= render '/search_container' %>
+ 
 
     <% if current_user.role == 'seller' %>
       <div class="create-product-section mb-8">
@@ -57,7 +57,7 @@
     <h1>Welcome to Your Dashboard</h1>
     <%= render 'header' %>
 
-    <%= render '/search_container' %>
+    
 
     <%= render 'products_container',
       header_text: 'All Products',
