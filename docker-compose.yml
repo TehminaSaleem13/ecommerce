@@ -1,0 +1,35 @@
+services:
+  db:
+    image: postgres:13
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ecommerce_development
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: tehminasaleem
+    ports:
+      - "5432:5432"
+
+  web:
+    build:
+      context: .
+    volumes:
+      - .:/app
+    
+     
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://postgres:tehminasaleem@db:5432/ecommerce_development
+      RAILS_ENV: development
+      STRIPE_API_KEY: sk_test_51REQhdRVc8jJ8ngvydPWgOgbGuQStTYO2OvZA55jDMYAZJAquN44TpGjMSkLYOuutp3ThZ6JVGymNI9ASYMa55zd00MxZFgpYB
+      command: bash -c "
+       bundle install &&
+       ruby -r ./patch_logger.rb bin/rails db:create db:migrate &&
+       ruby -r ./patch_logger.rb bin/rails server -b 0.0.0.0
+       "
+
+volumes:
+  postgres_data:
