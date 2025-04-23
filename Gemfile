@@ -28,6 +28,21 @@ gem 'jbuilder', '~> 2.7'
 # Use Active Model has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
+# Gemfile
+gem 'sidekiq-cron'
+
+group :development, :test do
+  gem 'rspec-rails', '~> 6.0'
+  gem 'factory_bot_rails'
+  gem 'faker'
+  gem 'database_cleaner-active_record'
+end
+gem 'sidekiq'
+
+group :test do
+  gem 'shoulda-matchers'
+end
+
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 

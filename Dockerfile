@@ -5,7 +5,8 @@ RUN apt-get update -qq && apt-get install -y \
     build-essential \
     libpq-dev \
     nodejs \
-    postgresql-client
+    postgresql-client \
+    cron  # Added cron to run scheduled jobs
 
 
 WORKDIR /app
@@ -22,7 +23,6 @@ RUN echo 'require "logger"\n\nmodule ActiveSupport\n  module LoggerThreadSafeLev
 
 
 COPY . /app
-
 
 EXPOSE 3000
 

@@ -15,21 +15,36 @@ services:
       context: .
     volumes:
       - .:/app
-    
-     
     ports:
       - "3000:3000"
     depends_on:
       - db
+      - redis
     environment:
       DATABASE_URL: postgres://postgres:tehminasaleem@db:5432/ecommerce_development
       RAILS_ENV: development
       STRIPE_API_KEY: ${STRIPE_API_KEY}
-      command: bash -c "
-       bundle install &&
-       ruby -r ./patch_logger.rb bin/rails db:create db:migrate &&
-       ruby -r ./patch_logger.rb bin/rails server -b 0.0.0.0
-       "
+      REDIS_URL: redis://redis:6379/0
+    command: bash -c "
+      bundle install &&
+      ruby -r ./patch_logger.rb bin/rails db:create db:migrate &&
+      ruby -r ./patch_logger.rb bin/rails server -b 0.0.0.0
+      "
+
+  sidekiq:
+    build:
+      context: .
+    command: bundle exec sidekiq 
+    depends_on:
+      - redis
+    environment:
+      REDIS_URL: redis://redis:6379/0
+
+  redis:
+    image: "redis:6"
+    container_name: redis
+    ports:
+      - "6380:6379" 
 
 volumes:
   postgres_data:

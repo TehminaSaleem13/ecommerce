@@ -1,3 +1,4 @@
+require 'sidekiq/web'
 Rails.application.routes.draw do
   root to: 'dashboard#index'
   get 'dashboard/index'
@@ -28,5 +29,5 @@ Rails.application.routes.draw do
 
   resources :users, only: [:update]
 
- 
+  mount Sidekiq::Web => '/sidekiq'
 end
