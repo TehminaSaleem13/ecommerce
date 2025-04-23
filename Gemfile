@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.7.8'
+ruby '3.0.7'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
 gem 'rails', '~> 6.1.7', '>= 6.1.7.10'
@@ -18,7 +18,7 @@ gem 'kaminari', '~> 1.2'
 gem 'stripe', '~> 5.33'
 gem 'dotenv-rails', groups: [:development, :test]
 gem 'ransack'
-
+gem 'net-imap'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
@@ -27,6 +27,21 @@ gem 'jbuilder', '~> 2.7'
 # gem 'redis', '~> 4.0'
 # Use Active Model has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
+
+# Gemfile
+gem 'sidekiq-cron'
+
+group :development, :test do
+  gem 'rspec-rails', '~> 6.0'
+  gem 'factory_bot_rails'
+  gem 'faker'
+  gem 'database_cleaner-active_record'
+end
+gem 'sidekiq'
+
+group :test do
+  gem 'shoulda-matchers'
+end
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'

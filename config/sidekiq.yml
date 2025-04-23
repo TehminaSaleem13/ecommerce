@@ -1,0 +1,9 @@
+:concurrency: 5
+:queues:
+  - default
+  - mailers
+
+# Make sure this points to the Redis container
+:redis:
+  url: redis://redis:6379/0  
+  namespace: sidekiq

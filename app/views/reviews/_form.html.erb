@@ -11,12 +11,12 @@
     <% end %>
   
     <div class="form-group">
-      <%= form.label :text, 'Your Review' %>
+    
       <%= form.text_area :text, class: 'form-control', rows: 5 %>
     </div>
   
     <div class="mt-3">
-      <%= form.submit (review.new_record? ? 'Submit Review' : 'Update Review'), class: 'btn btn-primary' %>
+      <%= form.submit (review.new_record? ? 'Submit Review' : 'Update Review'), class: 'custom-save-btn' %>
     </div>
   <% end %>
   

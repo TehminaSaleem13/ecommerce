@@ -1,5 +1,5 @@
 require "active_support/core_ext/integer/time"
-
+require 'logger'
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -57,6 +57,14 @@ Rails.application.configure do
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
   config.assets.debug = true
+  # Allow Docker network access to the Rails web console
+config.web_console.permissions = '172.29.0.0/16'
+# config/environments/development.rb
+# config/environments/development.rb
+config.web_console.whitelisted_ips = ['127.0.0.1', '172.30.0.0/16']
+
+
+
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
 Rails.application.routes.default_url_options[:host] = 'localhost:3000'
   # Suppress logger output for asset requests.
