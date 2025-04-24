@@ -6,6 +6,22 @@ require_relative '../config/environment'
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
+# spec/rails_helper.rb
+require 'shoulda/matchers'
+require 'factory_bot_rails'
+
+
+RSpec.configure do |config|
+  config.include FactoryBot::Syntax::Methods
+  config.include Devise::Test::ControllerHelpers, type: :controller
+  config.include Devise::Test::ControllerHelpers, type: :view
+  config.before(:each, type: :controller) do
+    default_url_options = { host: 'localhost:3000' }
+    Rails.application.routes.default_url_options = default_url_options
+  end
+end
+
+Dir[Rails.root.join('spec/support/**/*.rb')].sort.each { |f| require f }
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are

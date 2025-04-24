@@ -5,7 +5,7 @@ class CheckoutSuccessService
   end
 
   def process
-  
+ 
     order = Order.create!(
       user: @user,
       status: 'paid',
@@ -15,15 +15,14 @@ class CheckoutSuccessService
       discount_percentage: @cart.discount_percentage,
       coupon_code: @cart.coupon_code
     )
-
+  
     @cart.cart_items.each do |cart_item|
       product = cart_item.product
       if product.quantity >= cart_item.quantity
       
         product.update(quantity: product.quantity - cart_item.quantity)
-
-       
         cart_item.update(order_id: order.id)
+      
       else
         Rails.logger.error("Insufficient quantity for product ID: #{product.id}")
       end

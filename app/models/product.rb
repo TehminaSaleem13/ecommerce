@@ -9,7 +9,7 @@ class Product < ApplicationRecord
   accepts_nested_attributes_for :product_images, allow_destroy: true
 
   validates :title, :description, :price, :quantity, presence: true
-  validates :serial_number, uniqueness: true
+  validates :serial_number, uniqueness: { case_sensitive: true }, allow_nil: true
   validates :quantity, numericality: { greater_than_or_equal_to: 0 }
 
   before_create :generate_unique_serial_number

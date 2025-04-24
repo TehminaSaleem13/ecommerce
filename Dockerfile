@@ -6,7 +6,7 @@ RUN apt-get update -qq && apt-get install -y \
     libpq-dev \
     nodejs \
     postgresql-client \
-    cron  # Added cron to run scheduled jobs
+    cron  
 
 
 WORKDIR /app

@@ -1,3 +1,5 @@
+
+
 services:
   db:
     image: postgres:13
@@ -34,17 +36,34 @@ services:
   sidekiq:
     build:
       context: .
-    command: bundle exec sidekiq 
+    command: bundle exec sidekiq
     depends_on:
       - redis
     environment:
       REDIS_URL: redis://redis:6379/0
 
+  test:
+    build: .
+    command: bash -c "bundle exec rails db:create db:migrate RAILS_ENV=test && bundle exec rspec"
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - redis
+    environment:
+      DATABASE_URL: postgres://postgres:tehminasaleem@db:5432/ecommerce_test
+      REDIS_URL: redis://redis:6379/0
+      RAILS_ENV: test
+      TERM: xterm-256color
+
+    tty: true
+    stdin_open: true
+
   redis:
     image: "redis:6"
     container_name: redis
     ports:
-      - "6380:6379" 
+      - "6380:6379"
 
 volumes:
   postgres_data:

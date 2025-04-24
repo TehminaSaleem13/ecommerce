@@ -3,5 +3,7 @@ class DashboardController < ApplicationController
   before_action :authenticate_user!, except: [:index]
   include CartManagement
 
-  
+
+
+
 end

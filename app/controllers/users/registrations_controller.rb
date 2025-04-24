@@ -6,7 +6,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
     if @user.save
       attach_default_avatar unless params[:user][:avatar].present?
-      ProductCreationWorker.perform_async(@user.id)
+     
       redirect_to new_user_session_path
     else
       render :new

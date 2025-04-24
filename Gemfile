@@ -30,18 +30,22 @@ gem 'jbuilder', '~> 2.7'
 
 # Gemfile
 gem 'sidekiq-cron'
+group :test do
+  gem 'shoulda-matchers'
+  gem 'factory_bot_rails'
+  gem 'rails-dom-testing'
+  gem 'rails-controller-testing'
+end
 
 group :development, :test do
   gem 'rspec-rails', '~> 6.0'
-  gem 'factory_bot_rails'
+  
   gem 'faker'
   gem 'database_cleaner-active_record'
 end
 gem 'sidekiq'
 
-group :test do
-  gem 'shoulda-matchers'
-end
+
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'

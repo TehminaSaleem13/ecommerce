@@ -14,7 +14,7 @@ class ProductsController < ApplicationController
 
   def create
     @product = current_user.products.build(product_params)
-      byebug
+    byebug
     if @product.save
       if params[:product][:new_images]
         params[:product][:new_images].each do |new_image|
