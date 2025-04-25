@@ -5,7 +5,7 @@ class ReviewsController < ApplicationController
 
   def index
     @reviews = @product.reviews
-    byebug
+    
   end
 
   def new
@@ -15,7 +15,7 @@ class ReviewsController < ApplicationController
   def create
     @review = @product.reviews.build(review_params)
     @review.user = current_user
-byebug
+
     if @review.save
       redirect_to product_path(@product), notice: 'Review was successfully created.'
     else

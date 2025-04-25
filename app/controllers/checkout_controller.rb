@@ -11,9 +11,7 @@ class CheckoutController < ApplicationController
       end
 
       begin
-        
         session = StripeCheckoutService.new(cart).create_session
-       
         redirect_to session.url, allow_other_host: true
       rescue Stripe::CardError => e
         flash[:alert] = "Payment error: #{e.message}"
@@ -30,25 +28,25 @@ class CheckoutController < ApplicationController
 
   def success
     session_id = params[:session_id]
-    
+
     if session_id.blank?
       flash[:alert] = "Invalid checkout session"
       redirect_to cart_path and return
     end
-    
+
     begin
       stripe_session = Stripe::Checkout::Session.retrieve(session_id)
-      
- byebug
+      byebug # Pause execution here to inspect the stripe_session
+
       cart = current_user.cart
       if stripe_session.client_reference_id.to_i != cart.id
         flash[:alert] = "Invalid checkout session"
         redirect_to cart_path and return
       end
-      
-   
+
       order = CheckoutSuccessService.new(cart).process
-  byebug
+      byebug # Pause execution here to inspect the order
+
       flash[:notice] = "Order ##{order.id} has been placed successfully! Thank you for your purchase!"
       redirect_to root_path
     rescue StandardError => e
