@@ -1,20 +1,19 @@
-<div class="container my-5">
-  <div class="card shadow-sm">
-    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-      <h3 class="mb-0">🛒 Your Cart</h3>
-       <%= link_to 'Continue Shopping', root_path, class: 'btn btn-info' %>
+<div class="cart-container">
+  <div class="cart-card">
+    <div class="cart-header">
+      <h3 class="cart-title">🛒 Your Cart</h3>
+      <%= link_to 'Continue Shopping', root_path, class: 'btn-cart-continue' %>
     </div>
-  
-    <div class="card-body">
-   
+
+    <div class="cart-body">
       <% if @cart.cart_items.any? %>
-        <div class="table-responsive">
-          <table class="table table-hover align-middle text-center">
-            <thead class="table-light">
+        <div class="cart-table-wrapper">
+          <table class="cart-table">
+            <thead>
               <tr>
                 <th>Product</th>
                 <th>Price</th>
-                <th style="width: 180px;">Quantity</th>
+                <th>Quantity</th>
                 <th>Total</th>
                 <th>Actions</th>
               </tr>
@@ -22,47 +21,51 @@
             <tbody>
               <% @cart.cart_items.each do |cart_item| %>
                 <tr>
-                  <td class="fw-bold"><%= cart_item.product.title %></td>
-                  <td><%= number_to_currency(cart_item.price) %></td>
+                  <td class="product-title"><%= cart_item.product.title %></td>
+                  <td><%= number_to_currency(cart_item.product.price) %></td>
                   <td>
-                    <%= form_with(model: cart_item, url: cart_item_path(cart_item), method: :patch, remote: true, class: 'd-flex align-items-center gap-2') do |f| %>
-                      <%= f.number_field :quantity, value: cart_item.quantity, min: 1, class: 'form-control form-control-sm w-50' %>
-                      <%= f.submit "Update", class: "btn btn-outline-primary btn-sm" %>
+                    <%= form_with(model: cart_item, url: cart_item_path(cart_item), method: :patch, remote: true, class: 'quantity-form') do |f| %>
+                      <%= f.number_field :quantity, value: cart_item.quantity, min: 1, class: 'quantity-input' %>
+                      <%= f.submit "Update", class: "btn-update" %>
                     <% end %>
                   </td>
-                  <td><strong><%= number_to_currency(cart_item.total_price) %></strong></td>
+                  <td><strong><%= number_to_currency(cart_item.product.price * cart_item.quantity) %></strong></td>
                   <td>
-                    <%= button_to "Remove", cart_item_path(cart_item), method: :delete, class: "btn btn-outline-danger btn-sm" %>
+                    <%= button_to "Remove", cart_item_path(cart_item), method: :delete, class: "btn-remove" %>
                   </td>
                 </tr>
               <% end %>
             </tbody>
           </table>
         </div>
-
-        <div class="d-flex justify-content-between align-items-center mt-4">
-          <h4 class="text-success mb-0">
+        
+        <div class="cart-summary">
+          <h4 class="cart-subtotal">
+            Subtotal: <%= number_to_currency(@cart.subtotal) %>
+          </h4>
+          
+      
+          
+          <h4 class="cart-total">
             🧾 Total: <%= number_to_currency(@cart.total_price) %>
           </h4>
-    <%= button_to 'Checkout with Stripe', checkout_create_path, method: :post, class: 'btn btn-success btn-lg' %>
-
-
-
+          
+          <%= button_to 'Checkout with Stripe', checkout_create_path, method: :post, class: 'btn-checkout' %>
         </div>
 
-        <div class="mt-4">
-          <%= form_with url: apply_coupon_cart_items_path, method: :post, local: true do |form| %>
+        <div class="coupon-section">
+          <%= form_with url: apply_coupon_cart_items_path, method: :post, local: true, class: 'coupon-form' do |form| %>
             <div class="form-group">
-              <%= form.label :coupon_code, 'Enter Coupon Code' %>
-              <%= form.text_field :coupon_code, class: 'form-control', required: true %>
+              <%= form.label :coupon_code, 'Enter Coupon Code', class: 'form-label' %>
+              <%= form.text_field :coupon_code, class: 'form-input', placeholder: 'e.g. DevnTech', required: true %>
+              <%= form.submit 'Apply Coupon', class: 'btn-coupon' %>
             </div>
-            <%= form.submit 'Apply Coupon', class: 'btn btn-primary' %>
           <% end %>
         </div>
       <% else %>
-        <div class="text-center py-5">
-          <p class="fs-5 text-muted">Your cart is empty.</p>
-          <%= link_to 'Continue Shopping', root_path, class: 'btn btn-outline-primary' %>
+        <div class="cart-empty">
+          <p>Your cart is empty.</p>
+          <%= link_to 'Continue Shopping', root_path, class: 'btn-cart-continue' %>
         </div>
       <% end %>
     </div>

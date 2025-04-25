@@ -2,6 +2,7 @@
 class StripeCheckoutService
     def initialize(cart)
       @cart = cart
+      Stripe.api_key = ENV['STRIPE_API_KEY'] 
     end
   
     def create_session

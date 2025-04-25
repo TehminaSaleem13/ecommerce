@@ -24,10 +24,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
     
     if resource.update(account_update_params)
       if request.xhr?
-        # For AJAX requests
+    
         render json: { success: true }
       else
-        # For normal requests, redirect back
+        
         flash[:notice] = "Avatar updated successfully"
         redirect_back(fallback_location: root_path)
       end

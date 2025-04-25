@@ -10,31 +10,59 @@ class CheckoutController < ApplicationController
         redirect_to cart_path and return
       end
 
-      session = StripeCheckoutService.new(cart).create_session
-      redirect_to session.url, allow_other_host: true
+      begin
+        session = StripeCheckoutService.new(cart).create_session
+        redirect_to session.url, allow_other_host: true
+      rescue Stripe::CardError => e
+        flash[:alert] = "Payment error: #{e.message}"
+        redirect_to cart_path
+      rescue StandardError => e
+        Rails.logger.error("Stripe session creation error: #{e.message}")
+        flash[:alert] = "An error occurred while processing your payment. Please try again."
+        redirect_to cart_path
+      end
     else
-      # Redirect non-logged-in users to the sign-up or login page
       redirect_to new_user_session_path, alert: 'Please sign in or sign up to proceed with checkout.'
     end
   end
 
   def success
     session_id = params[:session_id]
-    stripe_session = Stripe::Checkout::Session.retrieve(session_id)
 
-    cart = current_user.cart
-    CheckoutSuccessService.new(cart).process
+    if session_id.blank?
+      flash[:alert] = "Invalid checkout session"
+      redirect_to cart_path and return
+    end
 
-    flash[:notice] = "Payment successful. Thank you for your purchase!"
-    redirect_to root_path
+    begin
+      stripe_session = Stripe::Checkout::Session.retrieve(session_id)
+      byebug # Pause execution here to inspect the stripe_session
+
+      cart = current_user.cart
+      if stripe_session.client_reference_id.to_i != cart.id
+        flash[:alert] = "Invalid checkout session"
+        redirect_to cart_path and return
+      end
+
+      order = CheckoutSuccessService.new(cart).process
+      byebug # Pause execution here to inspect the order
+
+      flash[:notice] = "Order ##{order.id} has been placed successfully! Thank you for your purchase!"
+      redirect_to root_path
+    rescue StandardError => e
+      Rails.logger.error("Checkout processing failed: #{e.message}")
+      flash[:alert] = "There was a problem processing your order. Please contact support."
+      redirect_to cart_path
+    end
   end
 
   private
 
   def insufficient_inventory?(cart)
     cart.cart_items.any? do |cart_item|
-      if cart_item.product.quantity < cart_item.quantity
-        flash[:alert] = "Insufficient quantity available for #{cart_item.product.title}. Only #{cart_item.product.quantity} available."
+      product_quantity = cart_item.product.quantity
+      if product_quantity.nil? || product_quantity < cart_item.quantity
+        flash[:alert] = "Insufficient quantity available for #{cart_item.product.title}. Only #{product_quantity} available."
         true
       end
     end

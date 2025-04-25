@@ -1,3 +1,4 @@
+require 'sidekiq/web'
 Rails.application.routes.draw do
   root to: 'dashboard#index'
   get 'dashboard/index'
@@ -14,11 +15,8 @@ Rails.application.routes.draw do
   }
 
   resources :products do
-    collection do
-      get :search_suggestions
-    end
     resources :product_images, only: [:create, :destroy]
-    resources :reviews, only: [:create, :update, :destroy, :edit]
+    resources :reviews, only: [:index, :new, :create, :edit, :update, :destroy]
   end
 
   resources :cart_items, only: [:create, :update, :destroy] do
@@ -30,4 +28,6 @@ Rails.application.routes.draw do
   resource :cart, only: [:show]
 
   resources :users, only: [:update]
+
+  mount Sidekiq::Web => '/sidekiq'
 end
